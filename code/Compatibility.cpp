@@ -1,24 +1,24 @@
 #include"header.h"
-//æ±‚å¹³æ–¹
+//ÇóÆ½·½
 double Square(float x)
 {
 	return x * x;
 }
-//ä¸¤ç‚¹ä¹‹é—´çš„è·ç¦»
+//Á½µãÖ®¼äµÄ¾àÀë
 double Distance(pcl::PointXYZ &A, pcl::PointXYZ &B)
 {
 	float result;
 	result = sqrt(Square(A.x - B.x) + Square(A.y - B.y) + Square(A.z - B.z));
 	return result;
 }
-//åˆšæ€§çº¦æŸé¡¹r(ci,cj)
+//¸ÕĞÔÔ¼ÊøÏîr(ci,cj)
 float Rigidity(pcl::PointXYZ &source_i, pcl::PointXYZ &source_j, pcl::PointXYZ &target_i, pcl::PointXYZ &target_j)
 {
 	float result;
 	result = abs(Distance(source_i, source_j) - Distance(target_i, target_j));
 	return result;
 }
-//æ³•å‘é‡å¤¹è§’
+//·¨ÏòÁ¿¼Ğ½Ç
 double NormalDistance(pcl::Normal &n_i, pcl::Normal &n_j)
 {
 	float A, B;
@@ -28,7 +28,7 @@ double NormalDistance(pcl::Normal &n_i, pcl::Normal &n_j)
 	degree = 180 / M_PI * acos(A / B);
 	return degree;
 }
-//å…¼å®¹æ€§å€¼
+//¼æÈİĞÔÖµ
 double getCompatibility(pcl::PointXYZ &source_i, pcl::PointXYZ &source_j, pcl::PointXYZ &target_i, pcl::PointXYZ &target_j, 
 	pcl::Normal &ns_i, pcl::Normal &ns_j, pcl::Normal &nt_i, pcl::Normal &nt_j, float resolution)
 {
