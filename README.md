@@ -1,5 +1,6 @@
 # SAC-COT
-论文SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration的方法代码
+论文SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration  
+J. Yang, Z. Huang, S. Quan, Z. Qi and Y. Zhang, "SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration," in IEEE Transactions on Geoscience and Remote Sensing, doi: 10.1109/TGRS.2021.3058552.的方法代码
 
 # 环境配置：VS2017 + PCL1.81
 
