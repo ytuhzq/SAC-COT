@@ -1,22 +1,17 @@
 # SAC-COT
 C++ implementation of the SAC-COT method proposed by J. Yang et al. [1]
 
-# Running environment：
-VS2017(https://visualstudio.microsoft.com/zh-hans/.)  
-PCL1.81(https://github.com/PointCloudLibrary/pcl/releases.)
+# Requirements：
+To build this project you will need:
+* VS2017(https://visualstudio.microsoft.com/zh-hans/.)  
+* PCL1.81(https://github.com/PointCloudLibrary/pcl/releases.)
 
-# Run：
+# Compile and run：
 It can be run directly in the Main function, or it can be compiled and run on the command line  
 
-# Directories:：
-data：Contains a set of test data, including the source point cloud, the target point cloud, and the ground truth matrix
-code：Program source code  
-    Main:The main function  
-    header.h:Header file  
-    PclBasic.cpp：Point cloud processing, such as computing key points, descriptors, point cloud resolution, correspondence...  
-    Compatibility.cpp:Calculates compatibility values between correspondences  
-    graphRelated.cpp：According to the compatibility value between correspondences, calculate the compatibility matrix and the compatibility triangle.   
-    RANSACRelated.cpp：Functions related with RANSAC  
+# Directories:
+`\data：Contains a set of test data, including the source point cloud, the target point cloud, and the ground truth matrix`
+`\code：Program source code`
 
 # Main function flow
 1、 Read the point cloud data and the GT matrix  
