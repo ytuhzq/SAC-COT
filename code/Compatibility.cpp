@@ -1,24 +1,24 @@
 #include"header.h"
-//求平方
+//Square 
 double Square(float x)
 {
 	return x * x;
 }
-//两点之间的距离
+//Calculate the distance between two points
 double Distance(pcl::PointXYZ &A, pcl::PointXYZ &B)
 {
 	float result;
 	result = sqrt(Square(A.x - B.x) + Square(A.y - B.y) + Square(A.z - B.z));
 	return result;
 }
-//刚性约束项r(ci,cj)
+//r(ci,cj)
 float Rigidity(pcl::PointXYZ &source_i, pcl::PointXYZ &source_j, pcl::PointXYZ &target_i, pcl::PointXYZ &target_j)
 {
 	float result;
 	result = abs(Distance(source_i, source_j) - Distance(target_i, target_j));
 	return result;
 }
-//法向量夹角
+//Normal angle
 double NormalDistance(pcl::Normal &n_i, pcl::Normal &n_j)
 {
 	float A, B;
@@ -28,7 +28,7 @@ double NormalDistance(pcl::Normal &n_i, pcl::Normal &n_j)
 	degree = 180 / M_PI * acos(A / B);
 	return degree;
 }
-//兼容性值
+//Compatibility value
 double getCompatibility(pcl::PointXYZ &source_i, pcl::PointXYZ &source_j, pcl::PointXYZ &target_i, pcl::PointXYZ &target_j, 
 	pcl::Normal &ns_i, pcl::Normal &ns_j, pcl::Normal &nt_i, pcl::Normal &nt_j, float resolution)
 {
