@@ -20,10 +20,10 @@ code：Program source code
 
 # Main function flow
 1、 Read the point cloud data and the GT matrix  
-2、 Compute the point cloud resolution and downsample the Point Cloud (in order to reduce the size of the point cloud and increase the speed) 
-3、 Compute Normals, key points, descriptors (the key points used in the program are Harris 3D, the descriptors are SHOT, you can use other key points + descriptors combination) 
-4、 Calculate the initial matching set (based on the distance of the descriptor)
-5、 Calculated compatibility values between the matches, and construct the ternary ring and the compatibility triangle
+2、 Compute the point cloud resolution and downsample the Point Cloud (in order to reduce the size of the point cloud and increase the speed)  
+3、 Compute Normals, key points, descriptors (the key points used in the program are Harris 3D, the descriptors are SHOT, you can use other key points + descriptors combination)  
+4、 Calculate the initial matching set (based on the distance of the descriptor)  
+5、 Calculated compatibility values between the matches, and construct the ternary ring and the compatibility triangle  
 6、 Sorting ternary rings and compatibility triangles, guiding RANSAC sampling  
 
 # Pipeline of the proposed SAC-COT estimator.
