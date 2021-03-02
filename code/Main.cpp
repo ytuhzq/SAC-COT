@@ -1,11 +1,11 @@
 #include"header.h"
 bool compairCircleByDgree(const Circle& c1, const Circle& c2)
 {
-	return c1.degree > c2.degree;//降序排列
+	return c1.degree > c2.degree;
 }
 bool compairCircleByCompatibilityDist(const Circle& c1, const Circle& c2)
 {
-	return c1.compatibility_dist > c2.compatibility_dist;//降序排列
+	return c1.compatibility_dist > c2.compatibility_dist;
 }
 bool compairLineByCompatibilityDist(const Line& l1, const Line& l2)
 {
@@ -47,8 +47,8 @@ int main(int argc, char **argv)
 	cout << "Before downsampling cloud_src->size()=" << cloud_src->size() << endl;
 	cout << "Befter downsampling cloud_tar->size()=" << cloud_tar->size() << endl;
 
-	//downsampling, 减小点云规模，加快算法速度
-	cloud_src = downSampling(cloud_src, resolution, size);//1.7w
+	//downsampling
+	cloud_src = downSampling(cloud_src, resolution, size);
 	cloud_tar = downSampling(cloud_tar, resolution, size);
 	cout << "After downsampling cloud_src->size()=" << cloud_src->size() << endl;
 	cout << "After downsampling cloud_tar->size()=" << cloud_tar->size() << endl;
@@ -101,15 +101,13 @@ int main(int argc, char **argv)
 		source_match_points->points.push_back(cloud_src->points[source_idx]);
 		target_match_points->points.push_back(cloud_tar->points[target_idx]);
 	}
-	//计算正确匹配索引，correctCorrs[i]=0表示match[i]为错误匹配
-	vector<int>correctCorrs = getCorrectCorrs(source_match_points, target_match_points, GT, 5 * resolution);
 
-	vector<vector<double>>compatibility_matrix(100, vector<double>(100, 0));//compatibility_matrix[i][j]=k表示匹配i与匹配j的兼容性值为k
+	vector<vector<double>>compatibility_matrix(100, vector<double>(100, 0));
 	double c_dist_num[100];
 	vector<Node> nodes;
 	vector<vector<int>>adjacent_matrix(100, vector<int>(100, 0));
 
-	//初始化nodes
+	//Initializing nodes
 	for (int i = 0; i < match.size(); i++)
 	{
 		Node node;
@@ -124,9 +122,9 @@ int main(int argc, char **argv)
 	lines = getLine(adjacent_matrix, nodes, compatibility_matrix, 100);
 	sort(circles.begin(), circles.end(), compairCircleByCompatibilityDist);
 	sort(lines.begin(), lines.end(), compairLineByCompatibilityDist);
-	//把node按照度的大小排序
+	//Sort the nodes by degrees
 	sort(nodes.begin(), nodes.end(), compairNodeBydegree);
-	//选取top30的node组成三元组
+	//Select the node of Top30 to form triples
 	int topK = 30;
 	vector<Triple>triples = getTriple(nodes, topK);
 	sort(triples.begin(), triples.end(), compairTripleBydegree);
@@ -135,9 +133,9 @@ int main(int argc, char **argv)
 	int m;
 
 	int iteratorNums = 200;
-	//RANSAC 函数入口，Mat为SAC-COT算法输出
+	//RANSAC function entrance, Mat for SAC-COT algorithm output
 	m = GuideSampling_score(cloud_src, cloud_tar, circles, triples, match, resolution, iteratorNums, 7.5, Mat, "Inlier");
-	//对比Mat与GT之间的差异，衡量算法优劣
+	//Compare the difference between Mat and GT, and measure the algorithm
 	RMSE = RMSE_compute(cloud_src, cloud_tar, Mat, GT, resolution);
 	return 0;
 }
