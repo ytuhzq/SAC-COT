@@ -1,25 +1,31 @@
 # SAC-COT
-论文SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration  
-J. Yang, Z. Huang, S. Quan, Z. Qi and Y. Zhang, "SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration," in IEEE Transactions on Geoscience and Remote Sensing, doi: 10.1109/TGRS.2021.3058552.的方法代码
+C++ implementation of the SAC-COT method proposed by J. Yang et al. [1]
 
-# 环境配置：VS2017 + PCL1.81
+# Environment configuration：
+VS2017(https://visualstudio.microsoft.com/zh-hans/.)  
+PCL1.81(https://github.com/PointCloudLibrary/pcl/releases.)
 
-# 文件说明：
-data：包含一组测试用的数据，含源点云、目标点云、ground truth矩阵  
-code：算法代码  
-    Main:程序入口  
-    header.h:头文件  
-    PclBasic.cpp：主要对点云进行处理，如计算关键点，描述子、点云分辨率、匹配等  
-    Compatibility.cpp计算匹配之间的兼容性值  
-    graphRelated.cpp：根据匹配之间的兼容性值，计算兼容性矩阵和兼容三角形  
-    RANSACRelated.cpp：和RANSAC有关的函数  
+# Directories:：
+data：Contains a set of test data, including the source point cloud, the target point cloud, and the ground truth matrix
+code：Program source code  
+    Main:The main function  
+    header.h:Header file  
+    PclBasic.cpp：Point cloud processing, such as computing key points, descriptors, point cloud resolution, correspondence...  
+    Compatibility.cpp:Calculates compatibility values between correspondences  
+    graphRelated.cpp：According to the compatibility value between correspondences, calculate the compatibility matrix and the compatibility triangle.   
+    RANSACRelated.cpp：Functions related with RANSAC  
     
-# 运行：可直接在Main函数中运行，也可以编译后在命令行中运行  
+# Run：
+It can be run directly in the Main function, or it can be compiled and run on the command line  
 
-# 算法流程（和Main函数一致）  
-1、 读取点云数据和GT矩阵  
-2、 计算点云分辨率，对点云进行降采样（为了减小点云规模，提高速度）  
-3、 计算法线、关键点、描述子（程序中使用的关键点为Harris3D，描述子为SHOT，可以使用其它关键点+描述子组合）  
-4、 计算初始匹配集（根据描述子对应距离计算）  
-5、 计算匹配之间的兼容性值，构建三元环和兼容性三角形  
-6、 将三元环和兼容性三角形排序，指导RANSAC采样  
+# Algorithmic flow（It is consistent with the Main function）  
+1、 Read the point cloud data and the GT matrix  
+2、 Compute the point cloud resolution and downsample the Point Cloud (in order to reduce the size of the point cloud and increase the speed) 
+3、 Compute Normals, key points, descriptors (the key points used in the program are Harris 3D, the descriptors are SHOT, you can use other key points + descriptors combination) 
+4、 Calculate the initial matching set (based on the distance of the descriptor)
+5、 Calculated compatibility values between the matches, and construct the ternary ring and the compatibility triangle
+6、 Sorting ternary rings and compatibility triangles, guiding RANSAC sampling  
+
+# Bibliography:  
+[1] J. Yang, Z. Huang, S. Quan, Z. Qi and Y. Zhang, "SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration,"   
+in IEEE Transactions on Geoscience and Remote Sensing, doi: 10.1109/TGRS.2021.3058552.
