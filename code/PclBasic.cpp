@@ -85,7 +85,6 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr getHarrisKeypoint3D(pcl::PointCloud<pcl::Poi
 	harris.setNonMaxSupression(true);
 	harris.setRefine(false);
 	harris.setRadius(radius);
-	//ÉèÖÃ²ÎÊı¹ı´ó£¬¹Ø¼üµãÊıÁ¿Îª0£¬¹ıĞ¡£¬¹Ø¼üµãÎªÊıÁ¿Îª¶¨Öµ£¬¿ÉÊÓ»¯Ê±»á³öÏÖÎÊÌâ¡£
 	//harris.setThreshold(0.8*resolution);
 	harris.compute(result);
 	pcl::copyPointCloud(result, *keyPoint);
@@ -175,7 +174,7 @@ pcl::PointCloud<pcl::SHOT352>::Ptr SHOT_compute(pcl::PointCloud<pcl::PointXYZ>::
 
 bool compair(const Match_pair& v1, const Match_pair& v2)
 {
-	return v1.ratio > v2.ratio;//½µĞòÅÅÁĞ
+	return v1.ratio > v2.ratio;
 }
 vector<Match_pair> getTopKCorresByRatio(pcl::PointCloud<pcl::SHOT352>::Ptr descriptors_src,
 	pcl::PointCloud<pcl::SHOT352>::Ptr descriptors_tar, vector<int> keyPoint_index_src, vector<int> keyPoint_index_tar, int k)
@@ -206,15 +205,12 @@ vector<Match_pair> getTopKCorresByRatio(pcl::PointCloud<pcl::SHOT352>::Ptr descr
 	return match;
 }
 
-// ·ÂÕæÉú³ÉÖ¸¶¨ÕıÈ·ÂÊµÄÆ¥Åä¼¯
-// kÒªÉú³ÉÆ¥Åä¼¯µÄ´óĞ¡£¬correctRateÕıÈ·ÂÊ£¬resolutionµãÔÆ·Ö±æÂÊ£¬thresholdÅĞ¶Ï´ËÆ¥ÅäÎªÕıÈ·Æ¥ÅäµÄãĞÖµ
 vector<Match_pair> generateMatch(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_source, pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_target,
 	 vector<int> keyPoint_index_src, vector<int> keyPoint_index_tar, Eigen::Matrix4f GT, int k, float correctRate, float resolution, float threshold)
 {
 	pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_source_trans(new pcl::PointCloud<pcl::PointXYZ>);
 	pcl::transformPointCloud(*cloud_source, *cloud_source_trans, GT);
 
-	//Éú³ÉÕıÈ·Æ¥ÅäµÄÊıÁ¿
 	int correctNum = k * correctRate;
 
 	std::vector<Match_pair> match;
@@ -226,17 +222,12 @@ vector<Match_pair> generateMatch(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_sourc
 
 	for (int i = 0; i < keyPoint_index_src.size(); i++)
 	{
-		//Éú³ÉµÄÆ¥ÅäÊıÁ¿ÒÑ¾­×ã¹»
 		if (match.size() >= k)break;
-		//1.¼ÆËãÆ¥ÅäÔ´Ë÷Òı
 		int indexSrc = keyPoint_index_src[i];
-		//2.¼ÆËãÆ¥ÅäÄ¿±êË÷Òı
 		int indexTar = -1;
-		//·ÂÕæÉú³ÉÌØ¶¨ÊıÁ¿µÄÕıÈ·Æ¥Åä
 		if (match.size() < correctNum)
 		{
 			kdtree.nearestKSearch(cloud_source_trans->points[indexSrc], 1, index, Dist);
-			//È·±£¾àÀëĞ¡ÓÚÌØ¶¨ãĞÖµ
 			if (Dist[0] < threshold * resolution)
 			{
 				indexTar = index[0];
@@ -245,12 +236,10 @@ vector<Match_pair> generateMatch(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_sourc
 			}
 			else continue;
 		}
-		//Ëæ»úÉú³É´íÎóÆ¥Åä
 		else
 		{
 			Rand_1(i, cloud_target->size(), indexTar);
 		}
-		//¼ÓÈëÆ¥Åä
 		if (indexTar != -1)
 		{
 			pair.source_idx = indexSrc;
@@ -416,19 +405,15 @@ void Add_Gaussian_noise(float dev, pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, p
 void GUO_ICP(PointCloudPtr&cloud_source, PointCloudPtr&cloud_target, float&mr, int&Max_iter_Num, Eigen::Matrix4f&Mat_ICP)
 {
 	int number_of_sample_points;
-	float residual_error = 4.0f;//ÎªmrµÄ±¶Êı£¬³õÊ¼Ñ¡max/20µã
+	float residual_error = 4.0f;
 	float inlier_thresh = 4.0f;
 	Mat_ICP = Eigen::Matrix4f::Identity();
-	//int n_min=1000,n_max=cloud_source->points.size();
-	//if(n_max<=n_min) n_min=n_max;//·ÀÖ¹sourceÖĞµã¹ıÉÙ
 
 	for (int i = 0; i < Max_iter_Num; i++)
 	{
 		//printf("ICP Iter.%d ,",i+1);
-		//sourceµãÔÆ±ä»»
 		pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_source_trans(new pcl::PointCloud<pcl::PointXYZ>);
 		pcl::transformPointCloud(*cloud_source, *cloud_source_trans, Mat_ICP);
-		//Ëæ»ú²ÉÑù
 		number_of_sample_points = cloud_source_trans->points.size() / pow(3.0f, residual_error);
 		//printf("No. of Sample points:%d ,",number_of_sample_points);
 		vector<int> Sample_cloud_Idx;
@@ -437,13 +422,12 @@ void GUO_ICP(PointCloudPtr&cloud_source, PointCloudPtr&cloud_target, float&mr, i
 		boost::variate_generator<boost::mt19937, boost::uniform_int<> > myrandom(engine, distribution);
 		for (int j = 0; j < number_of_sample_points; j++)
 			Sample_cloud_Idx.push_back(myrandom());
-		//Rand(cloud_source_trans->points.size()-1,number_of_sample_points,Sample_cloud_Idx);//×¢Òâ-1£¬Ëæ»úÊıÉú³ÉÆ÷0~max
+		//Rand(cloud_source_trans->points.size()-1,number_of_sample_points,Sample_cloud_Idx);
 		Eigen::Matrix4f Mat_i;
-		//ÀûÓÃ×î½üµã¶Ô¹À¼Æ±ä»»¾ØÕó²¢¼ÆËã±ä»»Îó²î
 		int flag = Iter_trans_est(cloud_source_trans, cloud_target, mr, inlier_thresh, Sample_cloud_Idx, residual_error, Mat_i);
 		if (flag == -1)
 		{
-			printf("ãĞÖµ¹ıĞ¡£¬ÎŞ·¨ÕÒµ½Æ¥Åäµã£¡\n");
+			printf("é˜ˆå€¼è¿‡å°ï¼Œæ— æ³•æ‰¾åˆ°åŒ¹é…ç‚¹ï¼\n");
 			break;
 		}
 		//printf("Trans error (mr):%f\n",residual_error);
@@ -470,7 +454,7 @@ int Iter_trans_est(PointCloudPtr&cloud_source, PointCloudPtr&cloud_target, float
 	for (int i = 0; i < Sample_cloud_Idx.size(); i++)
 	{
 		kdtree.nearestKSearch(cloud_source->points[Sample_cloud_Idx[i]], 1, Idx, Dist);
-		if (sqrt(Dist[0]) <= inlier_thresh * mr)//ÌŞ³ıÍâµã
+		if (sqrt(Dist[0]) <= inlier_thresh * mr)
 		{
 			closet_source->points.push_back(cloud_source->points[Sample_cloud_Idx[i]]);
 			closet_target->points.push_back(cloud_target->points[Idx[0]]);
@@ -483,7 +467,6 @@ int Iter_trans_est(PointCloudPtr&cloud_source, PointCloudPtr&cloud_target, float
 	{
 		residual_error /= closet_source->points.size();
 		residual_error /= mr;
-		//¹À¼Æ±ä»»¾ØÕó
 		pcl::registration::TransformationEstimationSVD<pcl::PointXYZ, pcl::PointXYZ> SVD;
 		SVD.estimateRigidTransformation(*closet_source, *closet_target, Mat);
 	}
@@ -517,11 +500,10 @@ void pointLFSH(float r, int bin_num, Vertex &searchPoint, Vertex& n, pcl::PointC
 	float nx = n.x;
 	float ny = n.y;
 	float nz = n.z;
-	float x0 = searchPoint.x - nx * r;//x0,y0,z0ÎªsearchpointÔÚÆ½ÃæÉÏµÄÍ¶Ó°
+	float x0 = searchPoint.x - nx * r;
 	float y0 = searchPoint.y - ny * r;
 	float z0 = searchPoint.z - nz * r;
 	float plane_D = -(nx*x0 + ny * y0 + nz * z0);
-	//int depth_bin_num=bin_num/3;//²ÎÊı¿Éµ÷
 	int depth_bin_num = bin_num / 3;
 	float depth_stride = 2 * r / depth_bin_num;
 	int depth_bin_id;
@@ -556,8 +538,8 @@ void pointLFSH(float r, int bin_num, Vertex &searchPoint, Vertex& n, pcl::PointC
 		if (temp_angle < -1)
 			temp_angle = -1;
 		temp_angle = acos(temp_angle) / M_PI * 180;
-		//Í³¼ÆÖ±·½Í¼
-		if (temp_depth >= 2 * r)//·ÀÖ¹¸¡µãÊıÒç³ö
+		//ç»Ÿè®¡ç›´æ–¹å›¾
+		if (temp_depth >= 2 * r)//é˜²æ­¢æµ®ç‚¹æ•°æº¢å‡º
 			depth_bin_id = depth_bin_num;
 		if (temp_depth <= 0.0f)
 			depth_bin_id = 1;
@@ -586,7 +568,7 @@ void pointLFSH(float r, int bin_num, Vertex &searchPoint, Vertex& n, pcl::PointC
 void LFSH_compute(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> indices, float sup_radius, int bin_num, vector<vector<float>>&Histograms)
 {
 	int i, j;
-	///////////////////////¼ÆËã·¨ÏòÁ¿/////////////////////////////
+	///////////////////////è®¡ç®—æ³•å‘é‡/////////////////////////////
 	pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> n;
 	pcl::PointCloud<pcl::Normal>::Ptr normals(new pcl::PointCloud<pcl::Normal>);
 	pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>);
@@ -595,7 +577,7 @@ void LFSH_compute(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud, vector<int> indices
 	n.setSearchMethod(tree);
 	n.setKSearch(20);
 	n.compute(*normals);
-	///////////////////¼ÆËã°üÎ§Çò//////////////////////////////
+	///////////////////è®¡ç®—åŒ…å›´çƒ//////////////////////////////
 	pcl::KdTreeFLANN<pcl::PointXYZ> kdtree;
 	vector<int>pointIdx;
 	vector<float>pointDst;
@@ -675,7 +657,7 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr getISS3dKeypoint(pcl::PointCloud<pcl::PointX
 	pcl::ISSKeypoint3D<pcl::PointXYZ, pcl::PointXYZ> iss_det;
 	pcl::search::KdTree<pcl::PointXYZ>::Ptr tree(new pcl::search::KdTree<pcl::PointXYZ>());
 	pcl::PointCloud<pcl::PointXYZ>::Ptr keyPoint(new pcl::PointCloud<pcl::PointXYZ>);
-	//²ÎÊıÉèÖÃ
+	//å‚æ•°è®¾ç½®
 	iss_det.setSearchMethod(tree);
 	iss_det.setSalientRadius(2.7 * resolution);//
 	iss_det.setNonMaxRadius(1.8 * resolution);//
@@ -794,22 +776,19 @@ int Three_Dist_compute(pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud, std::vector<i
 	}
 	return 0;
 }
-//ÇóÈı½ÇĞÎÃæ»ı;
-//·µ»Ø-1Îª²»ÄÜ×é³ÉÈı½ÇĞÎ;
+//the area of the triangle;
 double count_triangle_area(pcl::PointXYZ a, pcl::PointXYZ b, pcl::PointXYZ c) {
 	double area = -1;
 
-	double side[3];//´æ´¢ÈıÌõ±ßµÄ³¤¶È;
+	double side[3];
 
 	side[0] = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2) + pow(a.z - b.z, 2));
 	side[1] = sqrt(pow(a.x - c.x, 2) + pow(a.y - c.y, 2) + pow(a.z - c.z, 2));
 	side[2] = sqrt(pow(c.x - b.x, 2) + pow(c.y - b.y, 2) + pow(c.z - b.z, 2));
 
-	//²»ÄÜ¹¹³ÉÈı½ÇĞÎ;
 	if (side[0] + side[1] <= side[2] || side[0] + side[2] <= side[1] || side[1] + side[2] <= side[0]) return area;
 
-	//ÀûÓÃº£Â×¹«Ê½¡£s=sqr(p*(p-a)(p-b)(p-c)); 
-	double p = (side[0] + side[1] + side[2]) / 2; //°ëÖÜ³¤;
+	double p = (side[0] + side[1] + side[2]) / 2;
 	area = sqrt(p*(p - side[0])*(p - side[1])*(p - side[2]));
 
 	return area;
@@ -833,15 +812,15 @@ float getOverlapRate(pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_i, pcl::PointClou
 }
 bool compairCircleByDgree(const Circle& c1, const Circle& c2)
 {
-	return c1.degree > c2.degree;//½µĞòÅÅÁĞ
+	return c1.degree > c2.degree;
 }
 bool compairCircleByCompatibilityDist(const Circle& c1, const Circle& c2)
 {
-	return c1.compatibility_dist > c2.compatibility_dist;//½µĞòÅÅÁĞ
+	return c1.compatibility_dist > c2.compatibility_dist;
 }
 bool compairCircleByArea(const Circle& c1, const Circle& c2)
 {
-	return c1.area > c2.area;//½µĞòÅÅÁĞ
+	return c1.area > c2.area;
 }
 bool compairNodeBydegree(const Node& n1, const Node& n2)
 {
