@@ -122,17 +122,17 @@ void computeMatiax(PointCloudPtr cloud_src, PointCloudPtr cloud_tar, vector<Matc
 	pcl::PointXYZ sp_i, sp_j, tp_i, tp_j;
 	double compatibility_dist;
 
-	for (int i = 0; i < match.size(); i++)//选择第一根匹配
+	for (int i = 0; i < match.size(); i++)//Select the first match
 	{
 		src_idxi = match[i].source_idx;
-		tar_idxi = match[i].target_idx;//获取匹配对应的源点云与目标点云的索引
+		tar_idxi = match[i].target_idx;
 		sp_i = cloud_src->points[src_idxi];
-		tp_i = cloud_tar->points[tar_idxi];//获取对应点
+		tp_i = cloud_tar->points[tar_idxi];
 		src_normali = normals_src->points[src_idxi];
-		tar_normali = normals_tar->points[tar_idxi];//获取法线
-		for (int j = 0; j < match.size(); j++)//选择第二根匹配
+		tar_normali = normals_tar->points[tar_idxi];
+		for (int j = 0; j < match.size(); j++)
 		{
-			if (i != j)//两根匹配不相同时进行下一步计算
+			if (i != j)
 			{
 				src_idxj = match[j].source_idx;
 				tar_idxj = match[j].target_idx;
@@ -140,7 +140,7 @@ void computeMatiax(PointCloudPtr cloud_src, PointCloudPtr cloud_tar, vector<Matc
 				tp_j = cloud_tar->points[tar_idxj];
 				src_normalj = normals_src->points[src_idxj];
 				tar_normalj = normals_tar->points[tar_idxj];
-				//计算兼容性值
+				//Calculate compatibility values
 				compatibility_dist = getCompatibility(sp_i, sp_j, tp_i, tp_j, src_normali, src_normalj, tar_normali, tar_normalj, resolution);
 				if (compatibility_dist >= threshod)
 				{
