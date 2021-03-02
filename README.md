@@ -31,8 +31,7 @@ and 3-D registration. The key trait of our SAC-COT is the guided sampling step:
 
 # Result
 ![image](https://github.com/ytuhzq/SAC-COT/blob/master/images/result.png)  
-Exemplar registration results by SAC-COT on point clouds from the RESSO-LO(row1–row3) and ETH LiDAR(row4 and 0row5) data sets.  
-From left to right for each example: the source point cloud, the target point cloud, pointwise errors rendered in pseudocolor for each point in the overlapping area between two point clouds, and the registration result.
+Exemplar registration results by SAC-COT on point clouds from the RESSO-LO(row1–row3) and ETH LiDAR(row4 and 0row5) data sets. From left to right for each example: the source point cloud, the target point cloud, pointwise errors rendered in pseudocolor for each point in the overlapping area between two point clouds, and the registration result.
 
 # Bibliography:  
 [1] J. Yang, Z. Huang, S. Quan, Z. Qi and Y. Zhang, "SAC-COT: Sample Consensus by Sampling Compatibility Triangles in Graphs for 3-D Point Cloud Registration," in IEEE Transactions on Geoscience and Remote Sensing, doi: 10.1109/TGRS.2021.3058552.
